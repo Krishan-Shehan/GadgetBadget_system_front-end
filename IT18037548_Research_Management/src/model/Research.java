@@ -13,7 +13,7 @@ public class Research {
 			// Prepare the html table to be displayed
 			output = "<table border='1'>" + "<tr><th>RID</th>" + "<th>Title</th>" + "<th>Category</th>"
 					+ "<th>description</th>" + "<th>progress</th>" + "<th>estimateBudget</th>" + "<th>addedDate</th>"
-					+ "<th>approvalStatus</th>" + "<th>resercherName</th>" + "<th>resercherEmail</th>";
+					+ "<th>approvalStatus</th>" + "<th>resercherName</th>" + "<th>resercherEmail</th>" + "<th>Update</th><th>Remove</th></tr>";
 
 			String category = "";
 			String approvalStatus = "";
@@ -60,7 +60,13 @@ public class Research {
 				output += "<td>" + addedDate + "</td>";
 				output += "<td>" + approvalStatus + "</td>";
 				output += "<td>" + resercherName + "</td>";
-				output += "<td>" + resercherEmail + "</td></tr>";
+				output += "<td>" + resercherEmail + "</td>";
+				
+				output += "<td><input name='btnUpdate' type='button' value='Update' "
+						+ "class='btnUpdate btn btn-secondary' data-itemid='" + id + "'></td>"
+						+ "<td><input name='btnRemove' type='button' value='Remove' "
+						+ "class='btnRemove btn btn-danger' data-itemid='" + id + "'></td></tr>";
+			
 			}
 
 			// Complete the html table
@@ -97,9 +103,11 @@ public class Research {
 			// execute the statement
 			preparedStmt.execute();
 			
-			output = "Inserted successfully";
+			String newItems = readResearch();
+			output = "{\"status\":\"success\", \"data\": \"" +newItems + "\"}";
+			
 		} catch (Exception e) {
-			output = "Error while inserting";
+			output = "{\"status\":\"error\", \"data\":\"Error while inserting.\"}";
 			System.err.println(e.getMessage());
 		}
 
@@ -120,6 +128,7 @@ public class Research {
 		if (approvalStatus.equals("sendAP")) {
 			ResearchApprovalStatus.insertToApproval(rid, progress, approvalStatus);
 		}
+		
 		return output;
 	}
 
@@ -143,9 +152,11 @@ public class Research {
 			// execute the statement
 			preparedStmt.execute();
 			
-			output = "Updated successfully";
+			String newItems = readResearch();
+			output = "{\"status\":\"success\", \"data\": \"" +newItems + "\"}";
+			
 		} catch (Exception e) {
-			output = "Error while updating";
+			output = "{\"status\":\"error\", \"data\":\"Error while Updating.\"}";
 			System.err.println(e.getMessage());
 		}
 
@@ -172,9 +183,10 @@ public class Research {
 				preparedStmt.setInt(1, Integer.parseInt(id));
 				// execute the statement
 				preparedStmt.execute();
-				output = "Deleted successfully";
+				String newItems = readResearch();
+				output = "{\"status\":\"success\", \"data\": \"" +newItems + "\"}";
 			} catch (Exception e) {
-				output = "Error while deleting";
+				output = "{\"status\":\"error\", \"data\":\"Error while Deleting.\"}";
 				System.err.println(e.getMessage());
 			}
 
